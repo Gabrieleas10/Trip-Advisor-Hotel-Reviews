@@ -165,6 +165,34 @@ def ajust(num):
 base['ADJ_POS%'] = base['ADJ_POS%'].apply(ajust)
 base['ADJ_NEG%'] = base['ADJ_NEG%'].apply(ajust)
 
-# 
+# correlation matrix
 matrix_corr = base.corr(method='spearman')
 matrix_corr = matrix_corr['Rating'].sort_values(ascending=False)
+
+# features
+features = base[['Positive%','Negative%','First_Words_P','First_Words_N','ADJ%','Positive']]
+# target param
+label = base[['Rating']]
+# creating scaler
+scaler = sklearn.preprocessing.StandardScaler()
+
+features = scaler.fit_transform(features)
+
+# spliting dataset in train and test
+train_features, test_features, train_labels, test_labels = train_test_split(features , label, 
+                                                                            test_size = 0.25, 
+                                                                            random_state = 0)
+
+param_grid = [{'n_estimators':[20,30,40,45,50,55,60,70,100,150,200,250,300,350,400,450,500],
+               'max_depth':[5,8,10,12,13,15,16,17,18,19,20,22,25,30,35,40,50,60],
+               'criterion':['gini','entropy']}]
+
+clf = sklearn.ensemble.RandomForestClassifier() 
+
+gs = GridSearchCV(clf, param_grid = param_grid, scoring='accuracy', cv=3)
+
+clf.fit(train_features, train_labels)
+
+predictions = clf.predict(test_features)
+
+acc = sklearn.metrics.accuracy_score(test_labels, predictions)
