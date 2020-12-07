@@ -10,7 +10,7 @@ from sklearn.svm import SVC
 from sklearn.utils import resample
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
-from xgboost import XGBRegressor , XGBClassifier
+#from xgboost import XGBRegressor , XGBClassifier
 import nltk
 from nltk.tag import pos_tag
 from functools import reduce
@@ -70,7 +70,7 @@ base['Review'] = base['Review'].apply(lambda x: x.split())
 base['Review'] = base['Review'].apply(lambda x:[item.replace(',','') for item in x if item.count(',')!=-1])
 
 # importing list of words: positive and negative
-eas = os.path.join('C:\\Users\\GABRIEL\\Downloads\\')
+eas = os.path.join('E:\\Projects\\Trip-Advisor-Hotel-Reviews\\words_list\\')
 pos_words_file = os.path.join(eas, 'positive_words.txt')
 neg_words_file = os.path.join(eas, 'negative_words.txt')
 
@@ -155,3 +155,16 @@ base['Delta'] = base['Delta'].fillna(0, inplace=True)
 base['ADJ_POS%'] = base['ADJ_POS%'].replace('inf', 1)
 base['ADJ_NEG%'] = base['ADJ_NEG%'].replace('inf', 1)
 
+def ajust(num):
+    if num > 1:
+        num =1
+    else:
+        num
+    return num
+
+base['ADJ_POS%'] = base['ADJ_POS%'].apply(ajust)
+base['ADJ_NEG%'] = base['ADJ_NEG%'].apply(ajust)
+
+# 
+matrix_corr = base.corr(method='spearman')
+matrix_corr = matrix_corr['Rating'].sort_values(ascending=False)
