@@ -102,6 +102,38 @@ base['Delta'] = base['Positive'] - base['Negative']
 base['First_Words_P'] = base['Review'].apply(lambda x: len((set(x[0:3]) & set(pos_words))))
 # counting first negatives words of review (0 to 3° word)
 base['First_Words_N'] = base['Review'].apply(lambda x: len((set(x[0:3]) & set(neg_words))))
-# 
+# using nltk pack to identify the gramatical class of word
 base['Tags'] = base['Review'].apply(lambda x: pos_tag(x))
-    
+
+# counting values of gramatical class
+def tag_type(tag):
+    tag_list = []
+    for i in range(0,len(tag),1):
+        tagt = tag[i][1]
+        tag_list.append(tagt[0:2])
+    return tag_list
+
+base['Tag_Type'] = base['Tags'].apply(tag_type)
+base['Dict_Tag'] = base['Tag_Type'].apply(lambda x :{y:x.count(y) for y in x})
+
+# 
+def class_type(tag):
+    try:
+        adj = tag['JJ']
+    except:
+        adj = 0
+    try:
+        vb = tag['VB']
+    except:
+        vb = 0
+    try:
+        subs = tag['NN']
+    except:
+        subs = 0
+    try:
+        inj = tag['UH']
+    except:
+        inj = 0
+    return pd.Series([adj , vb , subs , inj])
+
+base[['ADJ','VB','SUBS','INJ']] = base['Dict_Tag'].apply(class_type )
