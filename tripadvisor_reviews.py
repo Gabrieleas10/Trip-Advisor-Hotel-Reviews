@@ -116,7 +116,7 @@ def tag_type(tag):
 base['Tag_Type'] = base['Tags'].apply(tag_type)
 base['Dict_Tag'] = base['Tag_Type'].apply(lambda x :{y:x.count(y) for y in x})
 
-# 
+# separating gramatical classes in columns
 def class_type(tag):
     try:
         adj = tag['JJ']
@@ -137,3 +137,21 @@ def class_type(tag):
     return pd.Series([adj , vb , subs , inj])
 
 base[['ADJ','VB','SUBS','INJ']] = base['Dict_Tag'].apply(class_type )
+# porcentage of positive adjectives
+base['ADJ_POS%'] = base['Positive'] / base['ADJ']
+# porcentage of negative adjectives
+base['ADJ_NEG%'] = base['Negative'] / base['ADJ'] 
+# porcentage of adjectives of total words
+base['ADJ%'] = base['ADJ'] / base['Total']
+# porcentage of verb of total words
+base['VB%'] = base['VB'] / base['Total']
+# porcentage of substantive of total words
+base['SUBS%'] = base['SUBS'] / base['Total']
+
+# adjusting dataframe before scaling
+base['ADJ_POS%'] = base['ADJ_POS%'].fillna(0, inplace=True)
+base['ADJ_NEG%'] = base['ADJ_NEG%'].fillna(0, inplace=True)
+base['Delta'] = base['Delta'].fillna(0, inplace=True)
+base['ADJ_POS%'] = base['ADJ_POS%'].replace('inf', 1)
+base['ADJ_NEG%'] = base['ADJ_NEG%'].replace('inf', 1)
+
