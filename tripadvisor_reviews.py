@@ -182,17 +182,26 @@ features = scaler.fit_transform(features)
 train_features, test_features, train_labels, test_labels = train_test_split(features , label, 
                                                                             test_size = 0.25, 
                                                                             random_state = 0)
-
+# dict of params teste
 param_grid = [{'n_estimators':[20,30,40,45,50,55,60,70,100,150,200,250,300,350,400,450,500],
                'max_depth':[5,8,10,12,13,15,16,17,18,19,20,22,25,30,35,40,50,60],
                'criterion':['gini','entropy']}]
 
+# creating classifier
 clf = sklearn.ensemble.RandomForestClassifier() 
-
+# creating gridsearch
 gs = GridSearchCV(clf, param_grid = param_grid, scoring='accuracy', cv=3)
+# searching best params
+gs.fit(train_features, train_labels)
+print(gs.best_params_)
 
-clf.fit(train_features, train_labels)
+# creating classifier with best params
+clf = sklearn.ensemble.RandomForestClassifier(n_estimators=gs.best_params_['n_estimators'],
+max_depth=gs.best_params_['max_depth'], criterion=gs.best_params_['criterion'])
 
+# predicting new values
 predictions = clf.predict(test_features)
 
+# checking accuracy
 acc = sklearn.metrics.accuracy_score(test_labels, predictions)
+print(acc)
