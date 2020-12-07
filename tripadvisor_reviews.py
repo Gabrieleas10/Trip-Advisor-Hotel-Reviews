@@ -170,7 +170,7 @@ matrix_corr = base.corr(method='spearman')
 matrix_corr = matrix_corr['Rating'].sort_values(ascending=False)
 
 # features
-features = base[['Positive%','Negative%','First_Words_P','First_Words_N','ADJ%','Positive']]
+features = base[['Positive%','Negative%','First_Words_P','First_Words_N','ADJ%','Positive','Negative','VB%']]
 # target param
 label = base[['Rating']]
 # creating scaler
@@ -183,8 +183,8 @@ train_features, test_features, train_labels, test_labels = train_test_split(feat
                                                                             test_size = 0.25, 
                                                                             random_state = 0)
 # dict of params teste
-param_grid = [{'n_estimators':[20,30,40,45,50,55,60,70,100,150,200,250,300,350,400,450,500],
-               'max_depth':[5,8,10,12,13,15,16,17,18,19,20,22,25,30,35,40,50,60],
+param_grid = [{'n_estimators':[60,70,100,150,200,250,300,350,400,450,500,550,600,700,750],
+               'max_depth':[15,16,17,18,19,20,22,25,30,35,40,50,60],
                'criterion':['gini','entropy']}]
 
 # creating classifier
