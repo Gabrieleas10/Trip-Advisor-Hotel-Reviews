@@ -18,6 +18,11 @@ from itertools import groupby
 import numpy as np
 import seaborn as sns
 
+# installing nltk packages
+nltk.download('punkt')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger')
+
 # importing dataset
 base = pd.read_csv('tripadvisor_hotel_reviews.csv' , sep=',')
 
@@ -87,16 +92,16 @@ base['Negative'] = base['Review'].apply(lambda x: len((set(x) & set(neg_words)))
 base['Total'] = base['Review'].apply(lambda x: len(x))
 # value of neutral words
 base['Neutro'] = base['Total'] - (base['Positive'] + base['Negative'])
-# 
+# percentage of positive words of review
 base['Positive%'] = base['Positive'] / base['Total'] 
-
+# percentage of negative words of review
 base['Negative%'] = base['Negative'] / base['Total']
-
+# difference between positive and negative words of review
 base['Delta'] = base['Positive'] - base['Negative']
-
+# counting first positives words of review (0 to 3° word)
 base['First_Words_P'] = base['Review'].apply(lambda x: len((set(x[0:3]) & set(pos_words))))
-
+# counting first negatives words of review (0 to 3° word)
 base['First_Words_N'] = base['Review'].apply(lambda x: len((set(x[0:3]) & set(neg_words))))
-
+# 
 base['Tags'] = base['Review'].apply(lambda x: pos_tag(x))
     
