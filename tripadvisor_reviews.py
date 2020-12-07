@@ -64,7 +64,7 @@ base['Review'] = base['Review'].apply(lambda x: x.split())
 
 base['Review'] = base['Review'].apply(lambda x:[item.replace(',','') for item in x if item.count(',')!=-1])
 
-#
+# importing list of words: positive and negative
 eas = os.path.join('C:\\Users\\GABRIEL\\Downloads\\')
 pos_words_file = os.path.join(eas, 'positive_words.txt')
 neg_words_file = os.path.join(eas, 'negative_words.txt')
@@ -72,9 +72,31 @@ neg_words_file = os.path.join(eas, 'negative_words.txt')
 pos_words = []
 neg_words = []
 
+# reading .txt files
 for pos_word in open(pos_words_file, 'r').readlines():
     pos_words.append(pos_word.replace('\n',''))
 
 for neg_word in open(neg_words_file, 'r').readlines():
     neg_words.append(neg_word.replace('\n',''))
+
+# counting positive words in review
+base['Positive'] = base['Review'].apply(lambda x: len((set(x) & set(pos_words))))
+# counting negative words in review
+base['Negative'] = base['Review'].apply(lambda x: len((set(x) & set(neg_words))))
+# total of words
+base['Total'] = base['Review'].apply(lambda x: len(x))
+# value of neutral words
+base['Neutro'] = base['Total'] - (base['Positive'] + base['Negative'])
+# 
+base['Positive%'] = base['Positive'] / base['Total'] 
+
+base['Negative%'] = base['Negative'] / base['Total']
+
+base['Delta'] = base['Positive'] - base['Negative']
+
+base['First_Words_P'] = base['Review'].apply(lambda x: len((set(x[0:3]) & set(pos_words))))
+
+base['First_Words_N'] = base['Review'].apply(lambda x: len((set(x[0:3]) & set(neg_words))))
+
+base['Tags'] = base['Review'].apply(lambda x: pos_tag(x))
     
