@@ -30,7 +30,7 @@ max_samples = len(base[base['Rating']== 5])
 # spliting dataset
 df_maj = base[(base['Rating'] == 5) ]
 
-
+# creating balanced datasets
 df_q1 = base[base['Rating'] == 1]
 df_q2 = base[base['Rating'] == 2]
 df_q3 = base[base['Rating'] == 3]
@@ -56,5 +56,25 @@ dfm4 = resample(df_q4 ,
                 n_samples= max_samples,
                 random_state=0)
 
-# creating dataset balaced
+# creating final dataset balaced
 base = pd.concat([df_maj , dfm1 , dfm2 , dfm3 , dfm4])
+
+# spliting review words
+base['Review'] = base['Review'].apply(lambda x: x.split()) 
+
+base['Review'] = base['Review'].apply(lambda x:[item.replace(',','') for item in x if item.count(',')!=-1])
+
+#
+eas = os.path.join('C:\\Users\\GABRIEL\\Downloads\\')
+pos_words_file = os.path.join(eas, 'positive_words.txt')
+neg_words_file = os.path.join(eas, 'negative_words.txt')
+
+pos_words = []
+neg_words = []
+
+for pos_word in open(pos_words_file, 'r').readlines():
+    pos_words.append(pos_word.replace('\n',''))
+
+for neg_word in open(neg_words_file, 'r').readlines():
+    neg_words.append(neg_word.replace('\n',''))
+    
