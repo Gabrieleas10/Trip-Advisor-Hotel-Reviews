@@ -170,7 +170,9 @@ matrix_corr = base.corr(method='spearman')
 matrix_corr = matrix_corr['Rating'].sort_values(ascending=False)
 
 # features
-features = base[['Positive%','Negative%','First_Words_P','First_Words_N','ADJ%','Positive','Negative','VB%']]
+features = base[['Positive%','Negative%','First_Words_P','First_Words_N',
+'ADJ%','Positive','Negative','VB%']]
+
 # target param
 label = base[['Rating']]
 # creating scaler
